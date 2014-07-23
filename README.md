@@ -27,5 +27,5 @@ Controller processes models.
 Admin Control Panel for Page Management, User Management, Feedback Form, etc.
 
 ###### @todo
-Figure out a plugin system where sets of functionality are components (promised based?)
+Figure out a plugin system where sets of functionality are components (promised based?). Plugins are pre-made que's of actions. You can then mix/match actions from plugins
 
