@@ -27,6 +27,7 @@
   "homepage": "https://github.com/tombert256/frameworkeyPromiseEdition",
   "dependencies": {
     "bluebird": "^2.2.2",
-    "express": "^4.6.1"
+    "express": "^4.6.1",
+    "lodash": "^2.4.1"
   }
 }
