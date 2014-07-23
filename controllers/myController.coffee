@@ -1,5 +1,6 @@
 module.exports =
         action: () ->
                 console.log 'yo'
-        action2: () ->
-                console.log 'mamma'
+                return 1
+        action2: (item) ->
+                console.log "#{item}"
