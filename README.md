@@ -20,6 +20,9 @@ Routing is promised based. Controllers can prepends promises in the constructor 
 
 #### 6) End of que has 1 last promise that returns a HTML response or JSON
 
+## Thoughts
+Controller processes models. 
+
 ###### @future
 Admin Control Panel for Page Management, User Management, Feedback Form, etc.
 
