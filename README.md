@@ -1,8 +1,7 @@
 frameworkeyPromiseEdition
 =========================
 
-# Promise based Express Server 
-
+Promise based Express Server 
 Framework, CMS
 
 ## Notes
