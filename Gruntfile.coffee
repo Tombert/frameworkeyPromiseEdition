@@ -24,7 +24,7 @@ module.exports = (grunt) ->
           paths: ['path/to/import', 'another/to/import']
           urlfunc: 'embedurl' # use embedurl('test.png') in our code to trigger Data URI embedding
           use: [
-            require('fluidity') # use stylus plugin at compile time
+            require 'fluidity' # use stylus plugin at compile time
           ]
           import: [      #  @import 'foo', 'bar/moo', etc. into every .styl file
             'foo'       #  that is compiled. These might be findable based on values you gave
