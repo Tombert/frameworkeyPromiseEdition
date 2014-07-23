@@ -22,8 +22,6 @@ module.exports = (app) ->
                 method = routeComponent[0].toLowerCase()
                 endpoint = routeComponent[1]
                 wrapper = (req, res) ->
-                        myReq = req
-                        myRes = res
                         allRoutes = configuredRoutes[route].split(' ')
                         promiseArray = []
 
@@ -39,10 +37,18 @@ module.exports = (app) ->
                                 promiseArray.push controllerObject[theController][theAction]
 
 
-                        endFunction = () ->
-                                myRes.send 200, hello: "world"
+                        endFunction = (finalResult) ->
+                                console.log finalResult
+                                if finalResult.renderType.toLowerCase() == 'html'
+                                        res.render finalResult.page, finalResult.data
+                                else if finalResult.renderType.toLowerCase() == 'json'
+                                        res.send finalResult.data
 
                         promiseArray.push endFunction
-                        _.reduce promiseArray, (cur, next) ->
+                        finalPromise = _.reduce promiseArray, (cur, next) ->
                                 cur.then(next)
+                                
+                        finalPromise.catch (e) ->
+                                console.log "There was an error: #{e}"
+                                res.send 500, message: "There was an error"
                 app[method](endpoint, wrapper)
