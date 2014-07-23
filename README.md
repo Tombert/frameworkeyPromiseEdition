@@ -1,4 +1,4 @@
-frameworkeyPromiseEdition
+Frameworkey - Promise Edition
 =========================
 
 Promise based Express Server 
