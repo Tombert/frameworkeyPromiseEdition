@@ -4,7 +4,8 @@ module.exports =
                 return 1
 
         action2: (item) ->
-                console.log "#{item}"
+                #console.log "#{item}"
+                console.log "fuck off"
                 return {fart: 'yo'}
 
         makeAPI: (renderingItem) ->
