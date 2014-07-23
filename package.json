@@ -1,0 +1,28 @@
+{
+  "name": "frameworkeyPromiseEdition",
+  "version": "0.0.0",
+  "description": "A promise-heavy framework",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tombert256/frameworkeyPromiseEdition.git"
+  },
+  "keywords": [
+    "frameworkey",
+    "framework",
+    "thomas",
+    "gebert",
+    "michael",
+    "lage",
+    "promise"
+  ],
+  "author": "thomas gebert",
+  "license": "The Unlicense",
+  "bugs": {
+    "url": "https://github.com/tombert256/frameworkeyPromiseEdition/issues"
+  },
+  "homepage": "https://github.com/tombert256/frameworkeyPromiseEdition"
+}
