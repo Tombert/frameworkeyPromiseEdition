@@ -28,6 +28,7 @@
   "dependencies": {
     "bluebird": "^2.2.2",
     "express": "^4.6.1",
+    "lodash": "^2.4.1"
     "grunt": "^0.4.5",
     "grunt-contrib-coffee": "^0.10.1",
     "grunt-contrib-cssmin": "*",
