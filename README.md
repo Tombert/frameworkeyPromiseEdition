@@ -23,6 +23,8 @@ Routing is promised based. Controllers can prepends promises in the constructor 
 ## Thoughts
 Controller processes models. 
 
+event -> dynamic construction of promise chain -> resolve
+
 ###### @future
 Admin Control Panel for Page Management, User Management, Feedback Form, etc.
 
