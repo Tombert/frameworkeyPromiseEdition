@@ -3,15 +3,6 @@ fs = Promise.promisifyAll require('fs')
 _ = require('lodash')
 
 
-# Grab an array of all the controller files in the controllers folder
-#
-# @future
-# Would prefer to make this async.  Will probably convert into a promise soon.
-# Can't convert into promise right now as I'm finding it pretty difficult to get
-# a handle on module.exports in a nested callback. 
-controllers = fs.readdirAsync('./controllers/')
-
-
 module.exports = (app) ->
         #This is quick handle on the controllers. 
         controllerObject = {}
