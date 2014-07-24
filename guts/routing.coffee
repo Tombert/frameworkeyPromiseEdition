@@ -124,5 +124,7 @@ module.exports = (app) ->
                                                 # log that error.
                                                 console.log "There has been an error: #{e}"
                                                 res.send 500, message: 'There has been an error'
-
+                                                
+                        # As stated above, wrapper will return a new function based on what 
+                        # we send in for "allRoutes"
                         app[method](endpoint, wrapper(allRoutes))
