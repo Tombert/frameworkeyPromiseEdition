@@ -1,8 +1,13 @@
 Frameworkey - Promise Edition
 =========================
 
-Promise based Express Server 
-Framework, CMS
+Have you ever felt that the callback model of Node can get kind of tiring?  Have you ever wanted to elegantly chain controller actions "Unix-pipeline-style"?  Have you ever wanted to use the `return` keyword in a web development setting? 
+
+## If you said yes to any of these questions, try out Frameworkey!
+
+Frameworkey is an MVC framework designed around extensive use of Bluebird promises. 
+
+
 
 ## Notes
 
