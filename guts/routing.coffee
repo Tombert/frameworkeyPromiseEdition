@@ -27,20 +27,9 @@ module.exports = (app) ->
                         # helper-variable. 
                         endpoint = routeComponent[1]
 
-
+                        # Split the routes on a space so as to separate individual action handlers. 
                         allRoutes = actionString.split ' '
-                        # I was having a bit of trouble with scopign and not-copying, and since
-                        # we're already utilizing lodash, I might as well take advantage of the
-                        # deep-copy function they have so as to guarantee it won't be a problem
-                        # in the future
 
-                        # This is a thunk'd funciton.  I was having some issues with the "allRoutes"
-                        # variable not being the one I needed, and it turns out that it was shallow
-                        # and redefining it based on the outside loop.
-                        #
-                        # Thus, I thunk'd it: I passit it into the function as an argument, so as to
-                        # guarantee that I'm getting a personalized "allroutes" variable.  The thunk
-                        # then returns a function that we can use. 
                         wrapper = (req, res) ->
                                         # A quick holder for all the promises yet to come. 
                                         promiseArray = []
