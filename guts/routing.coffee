@@ -4,6 +4,9 @@ _ = require 'lodash'
 getControllers = require './getControllers'
 
 module.exports = (app) ->
+        # This grabs the controllers and returns back a promise'd object of 
+        # them. It made more sense to put this in a separate file, since it's
+        # arguably useful in its own right. 
         getControllers()        
         .then (controllerObject) ->
                 #Let's load in the routes file
