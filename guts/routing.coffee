@@ -44,16 +44,13 @@ module.exports = (app) ->
                                 return controllerObject[myController][myAction]
 
                         wrapper = (req, res) ->
-                                        # A quick holder for all the promises yet to come. 
-                                        promiseArray = []
 
                                         # This is just a quick temporary promise to pass along the req
                                         # and res variables for later. 
                                         tempPromise = new Promise (resolve, reject) ->
                                                 resolve req, res
 
-                                        # Push this promise into our promise array. 
-                                        promiseArray.push tempPromise
+  
 
                                         # Once we've gotten all the handles on the functions we need
                                         # to call, we can concat it to all previous promises. Afterwards
@@ -61,7 +58,7 @@ module.exports = (app) ->
                                         # to run them, then converge into a single, final promise. 
                                         finalPromise =
                                                 do
-                                                        _.chain promiseArray
+                                                        _.chain [tempPromise]
                                                         .concat actionHandles
                                                         .reduce (cur, next) ->
                                                                 cur.then next
