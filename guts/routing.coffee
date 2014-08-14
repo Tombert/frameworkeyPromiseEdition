@@ -10,13 +10,13 @@ module.exports = (app) ->
                 configuredRoutes = require '../config/routes'
 
                 # Let's loop through the routes file and do the appropriate mapping.
-                for route of configuredRoutes
+                # NOTE: I really hate that the value comes before the key. 
+                _.each configuredRoutes, (actionString, route) -> 
 
                         # This is just a handle on the string object so as to avoid square-bracket-hell
-                        actionString = configuredRoutes[route]
 
                         # routes are stored like METHOD /route, so we'll split on spaces. 
-                        routeComponent = route.split(' ')
+                        routeComponent = route.split ' '
 
                         # THe first item should be the method, so we'll grab that.  The toLowerCase
                         # function is there to make the routing a bit more dev friendly in case
@@ -27,11 +27,12 @@ module.exports = (app) ->
                         # helper-variable. 
                         endpoint = routeComponent[1]
 
+
+                        allRoutes = actionString.split ' '
                         # I was having a bit of trouble with scopign and not-copying, and since
                         # we're already utilizing lodash, I might as well take advantage of the
                         # deep-copy function they have so as to guarantee it won't be a problem
                         # in the future
-                        allRoutes = _.cloneDeep(actionString.split ' ')
 
                         # This is a thunk'd funciton.  I was having some issues with the "allRoutes"
                         # variable not being the one I needed, and it turns out that it was shallow
@@ -40,8 +41,7 @@ module.exports = (app) ->
                         # Thus, I thunk'd it: I passit it into the function as an argument, so as to
                         # guarantee that I'm getting a personalized "allroutes" variable.  The thunk
                         # then returns a function that we can use. 
-                        wrapper = (allRoutes) ->
-                                (req, res) ->
+                        wrapper = (req, res) ->
                                         # A quick holder for all the promises yet to come. 
                                         promiseArray = []
 
@@ -64,17 +64,16 @@ module.exports = (app) ->
                                                 return controllerObject[myController][myAction]
 
                                         # Once we've gotten all the handles on the functions we need
-                                        # to call, we can concat it to all previous promises. 
-                                        endPromiseArray = promiseArray.concat actionHandles
-
-                                        # We need to guarantee these functions will run sequentially,
-                                        # piping the output from the previous one to the next one.
-                                        #
-                                        # It turns out that _.reduce is sort of designed for *exactly that*
-                                        #
-                                        # This should converge on one final promise. 
-                                        finalPromise = _.reduce endPromiseArray, (cur, next) ->
-                                                cur.then(next)
+                                        # to call, we can concat it to all previous promises. Afterwards
+                                        # we want these to run sequentially, so we use the reduce function
+                                        # to run them, then converge into a single, final promise. 
+                                        finalPromise =
+                                                do
+                                                        _.chain promiseArray
+                                                        .concat actionHandles
+                                                        .reduce (cur, next) ->
+                                                                cur.then next
+                                                        .value
 
                                         # Everything should be done.  We can finally render a template
                                         # or return back JSON depending on what they did on that last function
@@ -102,4 +101,4 @@ module.exports = (app) ->
                                                 
                         # As stated above, wrapper will return a new function based on what 
                         # we send in for "allRoutes"
-                        app[method](endpoint, wrapper(allRoutes))
+                        app[method](endpoint, wrapper)
