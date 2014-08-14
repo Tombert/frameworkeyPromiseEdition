@@ -30,6 +30,16 @@ module.exports = (app) ->
                         # Split the routes on a space so as to separate individual action handlers. 
                         allRoutes = actionString.split ' '
 
+                        # Loop through all the actions that are provided for that route,
+                        # look them up, return back the handles on the function.
+                        #
+                        # So as to save a "push" command we'll use a map
+                        actionHandles = _.map allRoutes, (a) ->
+                                actionComponent = a.split '.'
+                                myController = actionComponent[0]
+                                myAction = actionComponent[1]
+                                return controllerObject[myController][myAction]
+
                         wrapper = (req, res) ->
                                         # A quick holder for all the promises yet to come. 
                                         promiseArray = []
@@ -41,16 +51,6 @@ module.exports = (app) ->
 
                                         # Push this promise into our promise array. 
                                         promiseArray.push tempPromise
-
-                                        # Loop through all the actions that are provided for that route,
-                                        # look them up, return back the handles on the function.
-                                        #
-                                        # So as to save a "push" command we'll use a map
-                                        actionHandles = _.map allRoutes, (a) ->
-                                                actionComponent = a.split '.'
-                                                myController = actionComponent[0]
-                                                myAction = actionComponent[1]
-                                                return controllerObject[myController][myAction]
 
                                         # Once we've gotten all the handles on the functions we need
                                         # to call, we can concat it to all previous promises. Afterwards
