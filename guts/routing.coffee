@@ -4,9 +4,6 @@ _ = require('lodash')
 
 
 module.exports = (app) ->
-        #This is quick handle on the controllers. 
-        controllerObject = {}
-
         # For performance reasons, we're going to try and read these files asynchronously
         # utilizing the auto-generated bluebird conversion function
         fs.readdirAsync('./controllers/').then (controllers) ->
@@ -17,20 +14,27 @@ module.exports = (app) ->
                         return new Promise (resolve, reject) ->
                                 if file.match(/.+\.js/g) != null || file.match(/.+\.coffee/g) != null
                                         # When requiring the module, we don't really want to specify an extension.
-                                        # Let's get rid of it. 
+                                        # Let's get rid of it.
+                                        myObject = {}
                                         name = file.replace('.js', '').replace('.coffee', '')
 
                                         # Require the controller, feed it into the controllers
-                                        controllerObject[name] = require "../controllers/#{name}"
-                                        resolve()
+                                        myObject[name] = require "../controllers/#{name}"
+                                        resolve(myObject)
 
                 # Loop through all the controllers, and map all the returned promises to a new array
-                # so that we can yield when the entire thing is done. 
-                listOfPromises = _.map controllers, makeAsyncControllerParse
+                # so that we can yield when the entire thing is done.
+                listOfPromises
+                listOfPromises =
+                        do
+                                _.chain controllers
+                                .map makeAsyncControllerParse
+                                .reduce (bigObject, piece) -> _.extend bigObject, piece
+                                .value
 
                 # Once everything is done from above, we return back the collective promise
-                return Promise.all listOfPromises
-        .then () ->
+                return Promise.props listOfPromises
+        .then (controllerObject) ->
                 #Let's load in the routes file
                 configuredRoutes = require '../config/routes'
 
