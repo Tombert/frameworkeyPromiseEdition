@@ -57,12 +57,11 @@ module.exports = (app) ->
                                         # we want these to run sequentially, so we use the reduce function
                                         # to run them, then converge into a single, final promise. 
                                         finalPromise =
-                                                do
-                                                        _.chain [tempPromise]
-                                                        .concat actionHandles
-                                                        .reduce (cur, next) ->
-                                                                cur.then next
-                                                        .value
+                                            _.chain [tempPromise]
+                                            .concat actionHandles
+                                            .reduce (cur, next) ->
+                                                cur.then next
+                                            .value()
 
                                         # Everything should be done.  We can finally render a template
                                         # or return back JSON depending on what they did on that last function
