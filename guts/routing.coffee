@@ -15,9 +15,6 @@ module.exports = (app) ->
                 # Let's loop through the routes file and do the appropriate mapping.
                 # NOTE: I really hate that the value comes before the key. 
                 _.each configuredRoutes, (actionString, route) -> 
-
-                        # This is just a handle on the string object so as to avoid square-bracket-hell
-
                         # routes are stored like METHOD /route, so we'll split on spaces. 
                         routeComponent = route.split ' '
 
