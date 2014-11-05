@@ -30,7 +30,14 @@ module.exports = (app) ->
                         # helper-variable. 
                         endpoint = routeComponent[1]
 
-                        # Split the routes on a space so as to separate individual action handlers. 
+                        
+                        catchString = actionString.split('@')[1]
+                        catches = catchString.split '.'
+                        catchController = catches[0]
+                        catchFunction = catches[1]
+                        
+
+                        # Split the routes on a space so as to separate individual action handlers.
                         allRoutes = actionString.split ' '
 
                         # Loop through all the actions that are provided for that route,
@@ -92,13 +99,12 @@ module.exports = (app) ->
                                                 else if endData.renderType.toLowerCase() == 'json'
                                                         # end the request by sending back a status JSON
                                                         res.send endData.data
+                                                        
+                                        # We'll use the global catch defined at the end of the actions
+                                        # to handle residual errors.  If there's an issue, we go here.
+                                        # We can default to an empty function if there's an issue. 
+                                        finalPromise.catch controllerObject[catchController]?[catchFunction] || ->
 
-                                        finalPromise.catch (e) ->
-                                                # if there was an error anywhere along the way, let's
-                                                # end the chain, and throw back a 500 error. Let's
-                                                # log that error.
-                                                console.log "There has been an error: #{e}"
-                                                res.send 500, message: "There has been an error"
                                                 
                         # As stated above, wrapper will return a new function based on what 
                         # we send in for "allRoutes"
