@@ -7,7 +7,10 @@ module.exports = (app) ->
         # This grabs the controllers and returns back a promise'd object of 
         # them. It made more sense to put this in a separate file, since it's
         # arguably useful in its own right. 
-        getControllers()        
+        getControllers()
+
+        # Note, do this asynchronously. we'll load the controllers and policies
+        # simultaneously.   
         .then (controllerObject) ->
                 #Let's load in the routes file
                 configuredRoutes = require '../config/routes'
@@ -35,10 +38,23 @@ module.exports = (app) ->
                         #
                         # So as to save a "push" command we'll use a map
                         actionHandles = _.map allRoutes, (a) ->
+                                # We want to make it so that there's an option to handle
+                                # errors on an individual level.
+                                #
+                                # We use the questions mark becauae we wanna make it optional
+                                # to have an error handler
+                                errorStuff = a.split('!')?[1]?.split('.')
+
+                                # We need to parse out the actual funtions being used to handle errors
+                                error = controllerObject[errorStuff?[0]]?[errorStuff?[1]]
+
+                                # Since the actinos are written like controller.action, we need to split
+                                # on the '.' to separate them. 
                                 actionComponent = a.split '.'
+                                
                                 myController = actionComponent[0]
                                 myAction = actionComponent[1]
-                                return controllerObject[myController][myAction]
+                                return {action: controllerObject[myController][myAction], errorHandler: error}
 
                         wrapper = (req, res) ->
 
@@ -57,7 +73,7 @@ module.exports = (app) ->
                                             _.chain [tempPromise]
                                             .concat actionHandles
                                             .reduce (cur, next) ->
-                                                cur.then next
+                                                cur.then next.action, next.error
                                             .value()
 
                                         # Everything should be done.  We can finally render a template

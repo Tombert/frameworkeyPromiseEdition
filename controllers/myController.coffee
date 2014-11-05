@@ -9,6 +9,9 @@ module.exports =
 
         makeAPI: (renderingItem) ->
                 return {renderType: 'json', data: renderingItem}
-                
+
         makeDOM: (renderingItem) ->
                 return {renderType: 'html', data: renderingItem, page: 'testView'}
+
+        errorHandler: (e) ->
+                console.log 'dfdf'
