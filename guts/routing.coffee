@@ -29,11 +29,11 @@ module.exports = (app) ->
                         # Utilizing Coffee's "multi-return" thing, I can set the values pretty cleanly, 
                         # but not before I make sure the values are trimmed. 
                         [actionString, catchString] = totalString
-                                                      .replace(/(?:\r\n|\r|\n)/g, ' ')
-                                                      .replace( /\s\s+/g, ' ' )
+                                                      .replace /(?:\r\n|\r|\n)/g, ' '
+                                                      .replace /\s\s+/g, ' '
                                                       .trim()
-                                                      .split('@')
-                                                      .map (i) -> i.trim()
+                                                      .split '@'
+                                                      .map (i) -> do i.trim
 
                         # Again, just make it cleaner, we'll utilize the "multi-return" thing coffeescript does. 
                         # Since I don't want a hard requirement for a catch to exist, I will put a conditional to 
