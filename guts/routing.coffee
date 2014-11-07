@@ -18,8 +18,10 @@ module.exports = (app) ->
                 # Let's loop through the routes file and do the appropriate mapping.
                 # NOTE: I really hate that the value comes before the key. 
                 _.each configuredRoutes, (totalString, route) -> 
-                        # routes are stored like METHOD /route, so we'll split on spaces. 
-                        [method, endpoint] = route.split ' '
+                        # routes are stored like METHOD /route, so we'll split on spaces.
+                        # To make this a bit more dev-friendly, let's get rid of redundant 
+                        # spaces.  
+                        [method, endpoint] = route.replace(/\s\s+/g, ' ').trim().split ' '
 
                         # This bigass thing here is for dev-friendliness.  I don't want to punish people
                         # for separating controller calls to multiple lines if they want, and I don't want 
