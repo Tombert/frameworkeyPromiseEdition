@@ -31,7 +31,8 @@ module.exports = (app) ->
                         [actionString, catchString] = totalString
                                                       .replace(/(?:\r\n|\r|\n)/g, ' ')
                                                       .replace( /\s\s+/g, ' ' )
-                                                      .trim().split('@')
+                                                      .trim()
+                                                      .split('@')
                                                       .map (i) -> i.trim()
 
                         # Again, just make it cleaner, we'll utilize the "multi-return" thing coffeescript does. 
@@ -39,7 +40,7 @@ module.exports = (app) ->
                         # see if the catch is defined. 
                         [catchController,catchFunction] = catchString.split '.' if catchString?
                         
-
+                        catcher = controllerObject[catchController]?[catchFunction] || ->
                         # Split the routes on a space so as to separate individual action handlers.
                         allRoutes = actionString.split ' '
 
@@ -107,7 +108,7 @@ module.exports = (app) ->
                                         # We'll use the global catch defined at the end of the actions
                                         # to handle residual errors.  If there's an issue, we go here.
                                         # We can default to an empty function if there's an issue. 
-                                        finalPromise.catch controllerObject[catchController]?[catchFunction] || ->
+                                        finalPromise.catch  catcher
 
                                                 
                         # As stated above, wrapper will return a new function based on what 
