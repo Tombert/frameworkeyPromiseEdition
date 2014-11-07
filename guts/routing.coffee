@@ -59,14 +59,17 @@ module.exports = (app) ->
                                 # to assign. 
                                 [errorController, errorAction] = errorStuff.split '.' if errorStuff?
 
-                                # We need to parse out the actual funtions being used to handle errors
-                                error = controllerObject[errorController]?[errorAction]
-
-                                # Since the actinos are written like controller.action, we need to split
-                                # on the '.' to separate them. 
+                                #Let's parse out the controller and action. 
                                 [myController, myAction] = actionStuff.split '.'
+
+
+                                # Now let's grab the appropriate stuff out of the controllers. 
+                                finalAction =  controllerObject[myController][myAction]
+                                finalError = controllerObject[errorController]?[errorAction]
                                 
-                                return {action: controllerObject[myController][myAction], errorHandler: error}
+                                # Since everything is parsed out, let's just wrap this in an object 
+                                # So as to easily pipe into the promises. 
+                                return {action: finalAction, errorHandler: finalError}
 
                         wrapper = (req, res) ->
 
