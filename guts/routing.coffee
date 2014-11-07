@@ -17,7 +17,7 @@ module.exports = (app) ->
 
                 # Let's loop through the routes file and do the appropriate mapping.
                 # NOTE: I really hate that the value comes before the key. 
-                _.each configuredRoutes, (actionString, route) -> 
+                _.each configuredRoutes, (totalString, route) -> 
                         # routes are stored like METHOD /route, so we'll split on spaces. 
                         routeComponent = route.split ' '
 
@@ -30,11 +30,23 @@ module.exports = (app) ->
                         # helper-variable. 
                         endpoint = routeComponent[1]
 
-                        
-                        catchString = actionString.split('@')[1]
-                        catches = catchString.split '.'
-                        catchController = catches[0]
-                        catchFunction = catches[1]
+                        # This bigass thing here is for dev-friendliness.  I don't want to punish people
+                        # for separating controller calls to multiple lines if they want, and I don't want 
+                        # Punish them for adding multiple spaces.  Subsequently, I replace newlines with a 
+                        # space, then replace extra spaces down to one space, trim it, and split on the @ 
+                        # sign so I can make the dichotomy between application logic and error-handling logic.
+                        # Utilizing Coffee's "multi-return" thing, I can set the values pretty cleanly, 
+                        # but not before I make sure the values are trimmed. 
+                        console.log totalString
+                        [actionString, catchString] = totalString
+                                                      .replace(/(?:\r\n|\r|\n)/g, ' ')
+                                                      .replace( /\s\s+/g, ' ' )
+                                                      .trim().split('@')
+                                                      .map (i) -> i.trim()
+
+                        #Again, just make it cleaner, we'll utilize the "multi-return" thing coffeescript does. 
+                        console.log actionString
+                        [catchController,catchFunction] = catchString.split '.' if catchString?
                         
 
                         # Split the routes on a space so as to separate individual action handlers.
@@ -57,10 +69,8 @@ module.exports = (app) ->
 
                                 # Since the actinos are written like controller.action, we need to split
                                 # on the '.' to separate them. 
-                                actionComponent = a.split '.'
+                                [myController, myAction] = a.split '.'
                                 
-                                myController = actionComponent[0]
-                                myAction = actionComponent[1]
                                 return {action: controllerObject[myController][myAction], errorHandler: error}
 
                         wrapper = (req, res) ->
