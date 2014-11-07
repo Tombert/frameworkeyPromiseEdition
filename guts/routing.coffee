@@ -19,16 +19,7 @@ module.exports = (app) ->
                 # NOTE: I really hate that the value comes before the key. 
                 _.each configuredRoutes, (totalString, route) -> 
                         # routes are stored like METHOD /route, so we'll split on spaces. 
-                        routeComponent = route.split ' '
-
-                        # THe first item should be the method, so we'll grab that.  The toLowerCase
-                        # function is there to make the routing a bit more dev friendly in case
-                        # they want to use upper-case
-                        method = routeComponent[0].toLowerCase()
-
-                        #The second item in that array should be the endpoint. Lets' define a quick
-                        # helper-variable. 
-                        endpoint = routeComponent[1]
+                        [method, endpoint] = route.split ' '
 
                         # This bigass thing here is for dev-friendliness.  I don't want to punish people
                         # for separating controller calls to multiple lines if they want, and I don't want 
@@ -37,15 +28,15 @@ module.exports = (app) ->
                         # sign so I can make the dichotomy between application logic and error-handling logic.
                         # Utilizing Coffee's "multi-return" thing, I can set the values pretty cleanly, 
                         # but not before I make sure the values are trimmed. 
-                        console.log totalString
                         [actionString, catchString] = totalString
                                                       .replace(/(?:\r\n|\r|\n)/g, ' ')
                                                       .replace( /\s\s+/g, ' ' )
                                                       .trim().split('@')
                                                       .map (i) -> i.trim()
 
-                        #Again, just make it cleaner, we'll utilize the "multi-return" thing coffeescript does. 
-                        console.log actionString
+                        # Again, just make it cleaner, we'll utilize the "multi-return" thing coffeescript does. 
+                        # Since I don't want a hard requirement for a catch to exist, I will put a conditional to 
+                        # see if the catch is defined. 
                         [catchController,catchFunction] = catchString.split '.' if catchString?
                         
 
@@ -57,19 +48,22 @@ module.exports = (app) ->
                         #
                         # So as to save a "push" command we'll use a map
                         actionHandles = _.map allRoutes, (a) ->
-                                # We want to make it so that there's an option to handle
-                                # errors on an individual level.
-                                #
-                                # We use the questions mark becauae we wanna make it optional
-                                # to have an error handler
-                                errorStuff = a.split('!')?[1]?.split('.')
+                                # First we need to separate out the error handling stuff from the
+                                # actual program, so let's split that out, and utilize the multi-return
+                                # value feature of coffeescript. 
+                                [actionStuff, errorStuff] = a.split '!'
+
+                                # Since I don't want to make a hard requirement to provide an error-handler,
+                                # Let's put a put quick "if" at the end of this to make sure we have errorstuff
+                                # to assign. 
+                                [errorController, errorAction] = errorStuff.split '.' if errorStuff?
 
                                 # We need to parse out the actual funtions being used to handle errors
-                                error = controllerObject[errorStuff?[0]]?[errorStuff?[1]]
+                                error = controllerObject[errorController]?[errorAction]
 
                                 # Since the actinos are written like controller.action, we need to split
                                 # on the '.' to separate them. 
-                                [myController, myAction] = a.split '.'
+                                [myController, myAction] = actionStuff.split '.'
                                 
                                 return {action: controllerObject[myController][myAction], errorHandler: error}
 
@@ -117,5 +111,6 @@ module.exports = (app) ->
 
                                                 
                         # As stated above, wrapper will return a new function based on what 
-                        # we send in for "allRoutes"
-                        app[method] endpoint, wrapper
+                        # we send in for "allRoutes".  We're adding the "toLowerCase()" to make 
+                        # this a bit more dev-friendly. 
+                        app[method.toLowerCase()] endpoint, wrapper
