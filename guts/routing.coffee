@@ -20,8 +20,12 @@ module.exports = (app) ->
                 _.each configuredRoutes, (totalString, route) -> 
                         # routes are stored like METHOD /route, so we'll split on spaces.
                         # To make this a bit more dev-friendly, let's get rid of redundant 
-                        # spaces.  
-                        [method, endpoint] = route.replace(/\s\s+/g, ' ').trim().split ' '
+                        # spaces and newlines. 
+                        [method, endpoint] = route
+                                             .replace /(?:\r\n|\r|\n)/g, ' '
+                                             .replace(/\s\s+/g, ' ')
+                                             .trim()
+                                             .split ' '
 
                         # This bigass thing here is for dev-friendliness.  I don't want to punish people
                         # for separating controller calls to multiple lines if they want, and I don't want 
@@ -41,8 +45,10 @@ module.exports = (app) ->
                         # Since I don't want a hard requirement for a catch to exist, I will put a conditional to 
                         # see if the catch is defined. 
                         [catchController,catchFunction] = catchString.split '.' if catchString?
-                        
+
+                        # If we have a catch defined, awesome, else we'll just feed in an empty function.                         
                         catcher = controllerObject[catchController]?[catchFunction] || ->
+
                         # Split the routes on a space so as to separate individual action handlers.
                         allRoutes = actionString.split ' '
 
