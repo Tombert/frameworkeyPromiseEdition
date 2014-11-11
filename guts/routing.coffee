@@ -81,45 +81,45 @@ module.exports = (app) ->
 
                         wrapper = (req, res) ->
 
-                                        # This is just a quick temporary promise to pass along the req
-                                        # and res variables for later. 
-                                        tempPromise = new Promise (resolve, reject) ->
-                                                resolve req, res
+                                # This is just a quick temporary promise to pass along the req
+                                # and res variables for later. 
+                                tempPromise = new Promise (resolve, reject) ->
+                                        resolve req, res
 
-  
 
-                                        # Once we've gotten all the handles on the functions we need
-                                        # to call, we can concat it to all previous promises. Afterwards
-                                        # we want these to run sequentially, so we use the reduce function
-                                        # to run them, then converge into a single, final promise. 
-                                        finalPromise =
-                                            _.chain [tempPromise]
-                                            .concat actionHandles
-                                            .reduce (cur, next) ->
-                                                cur.then next.action, next.error
-                                            .value()
 
-                                        # Everything should be done.  We can finally render a template
-                                        # or return back JSON depending on what they did on that last function
-                                        finalPromise.then (endData) ->
+                                # Once we've gotten all the handles on the functions we need
+                                # to call, we can concat it to all previous promises. Afterwards
+                                # we want these to run sequentially, so we use the reduce function
+                                # to run them, then converge into a single, final promise. 
+                                finalPromise =
+                                    _.chain [tempPromise]
+                                    .concat actionHandles
+                                    .reduce (cur, next) ->
+                                        cur.then next.action, next.error
+                                    .value()
 
-                                                # If they want HTML, we'll give them HTML, gosh-darnit!
-                                                #
-                                                # We're using toLowerCase to make it a bit more dev-friendly
-                                                # in case they want to write html as HTML for some reason
-                                                if endData.renderType.toLowerCase() == 'html'
-                                                        # End the request by rendering the jade template
-                                                        res.render endData.page
-                                                        
-                                                # If they're making an API, let them make an api. 
-                                                else if endData.renderType.toLowerCase() == 'json'
-                                                        # end the request by sending back a status JSON
-                                                        res.send endData.data
-                                                        
-                                        # We'll use the global catch defined at the end of the actions
-                                        # to handle residual errors.  If there's an issue, we go here.
-                                        # We can default to an empty function if there's an issue. 
-                                        finalPromise.catch  catcher
+                                # Everything should be done.  We can finally render a template
+                                # or return back JSON depending on what they did on that last function
+                                finalPromise.then (endData) ->
+
+                                        # If they want HTML, we'll give them HTML, gosh-darnit!
+                                        #
+                                        # We're using toLowerCase to make it a bit more dev-friendly
+                                        # in case they want to write html as HTML for some reason
+                                        if endData.renderType.toLowerCase() == 'html'
+                                                # End the request by rendering the jade template
+                                                res.render endData.page
+                                                
+                                        # If they're making an API, let them make an api. 
+                                        else if endData.renderType.toLowerCase() == 'json'
+                                                # end the request by sending back a status JSON
+                                                res.send endData.data
+                                                
+                                # We'll use the global catch defined at the end of the actions
+                                # to handle residual errors.  If there's an issue, we go here.
+                                # We can default to an empty function if there's an issue. 
+                                finalPromise.catch  catcher
 
                                                 
                         # As stated above, wrapper will return a new function based on what 
