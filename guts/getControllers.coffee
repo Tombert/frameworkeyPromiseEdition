@@ -29,7 +29,7 @@ module.exports = () ->
                         do
                                 _.chain controllers
                                 .map makeAsyncControllerParse
-                                .reduce (bigObject, piece) -> _.extend bigObject, piece
+                                .reduce _.extend
                                 .value
 
                 # Once everything is done from above, we return back the collective promise object and
