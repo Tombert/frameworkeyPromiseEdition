@@ -1,14 +1,17 @@
 Frameworkey - Promise Edition
 =========================
+*Frameworkey is an MVC framework designed around extensive use of Bluebird promises.*
 
-Have you ever felt that the callback model of Node can get kind of tiring?  Have you ever wanted to elegantly chain controller actions "Unix-pipeline-style"?  Have you ever wanted to use the `return` keyword in a web development setting? 
+Have you ever felt that the callback model of Node can get kind of tiring?  Have you ever wanted to elegantly chain controller actions "Unix-pipeline-style"?  Have you ever wanted to use the `return` keyword in a web development setting? **If you said yes to any of these questions, try out Frameworkey!**
 
-## If you said yes to any of these questions, try out Frameworkey!
+## Installation
+Before using Frameworkey, you must install CoffeeScript.
 
-Frameworkey is an MVC framework designed around extensive use of Bluebird promises. 
-
-
-
+## Running
+Run the following command in the console
+```
+coffee app.coffee
+```
 ## Notes
 
 #### 1) Determine Routing - processRequest( request )
