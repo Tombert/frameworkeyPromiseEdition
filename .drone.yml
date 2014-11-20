@@ -1,0 +1,8 @@
+image: node
+script:
+  - npm install -g mocha
+  - npm test
+notify:
+  email:
+    recipients:
+      - thomasgebert@gmail.com
