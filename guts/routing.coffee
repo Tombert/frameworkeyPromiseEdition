@@ -1,7 +1,11 @@
+# Libraries
 Promise = require 'bluebird'
 fs = Promise.promisifyAll require 'fs'
 _ = require 'lodash'
+
+# Local 
 getControllers = require './getControllers'
+policies = require './polices'
 
 module.exports = (app) ->
 	# This grabs the controllers and returns back a promise'd object of 
@@ -29,7 +33,7 @@ module.exports = (app) ->
 
 			# This bigass thing here is for dev-friendliness.  I don't want to punish people
 			# for separating controller calls to multiple lines if they want, and I don't want 
-			# Punish them for adding multiple spaces.  Subsequently, I replace newlines with a 
+			# punish them for adding multiple spaces.  Subsequently, I replace newlines with a 
 			# space, then replace extra spaces down to one space, trim it, and split on the @ 
 			# sign so I can make the dichotomy between application logic and error-handling logic.
 			# Utilizing Coffee's "multi-return" thing, I can set the values pretty cleanly, 
@@ -76,15 +80,21 @@ module.exports = (app) ->
 				finalError = controllerObject[errorController]?[errorAction]
 				
 				# Since everything is parsed out, let's just wrap this in an object 
-				# So as to easily pipe into the promises. 
-				return {action: finalAction, errorHandler: finalError}
+				# So as to easily pipe into the promises.
+                finalObject =
+                    action: finalAction
+                    error: finalError
+                    controllerName: myController
+                    actionName: myAction
+				return finalObject
 
 			wrapper = (req, res) ->
 
-					# This is just a quick temporary promise to pass along the req
-					# and res variables for later. 
-					tempPromise = new Promise (resolve, reject) ->
-						resolve req, res
+                    # We need to make sure the user is allowed to use everything that
+                    # this route has to offer.  Due to the beauty of Bluebird, if
+                    # this this trips up, it'll just kill the promise chain and
+                    # make it so that we don't go any farther than we're allowed to. 
+                    authPromise = policies actionHandles, req, res
 
   
 
@@ -93,10 +103,10 @@ module.exports = (app) ->
 					# we want these to run sequentially, so we use the reduce function
 					# to run them, then converge into a single, final promise. 
 					finalPromise =
-					    _.chain [tempPromise]
+					    _.chain [authPromise]
 					    .concat actionHandles
 					    .reduce (cur, next) ->
-						cur.then next.action, next.error
+    						cur.then next.action, next.error
 					    .value()
 
 					# Everything should be done.  We can finally render a template
@@ -125,4 +135,4 @@ module.exports = (app) ->
 			# As stated above, wrapper will return a new function based on what 
 			# we send in for "allRoutes".  We're adding the "toLowerCase()" to make 
 			# this a bit more dev-friendly. 
-			app[method.toLowerCase()] endpoint, wrapper
+			app[do method.toLowerCase] endpoint, wrapper
