@@ -32,10 +32,15 @@ Since there is an array routeActions (purposefully), we need to loop through the
                 
                 policyResults = _.flatten _.map routeActions, (action) ->
 
+
+
+                    
 ---------------------------------------
+
+
                     
 What I'm doing here is looking for the policies file.
-If there is a policy defined for that action, use that, else use the * catch all.
+If there is a policy defined for that action, use that, else use the `*` catch all.
 
 The flatten is necessary simply because I don't want to punish people for only listing one policy outside of an array.  Subsequently, we'll wrap everything in an array and then flatten it. 
 
