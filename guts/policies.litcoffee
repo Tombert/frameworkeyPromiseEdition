@@ -1,8 +1,12 @@
-Libraries
+Load in the libraries
 
     _ = require 'lodash'
     Promise = require "bluebird"
+
+Load up the user-defined policies. 
+
     policies = require '../config/policies'
+
 
     module.exports = (routeActions, req, res) ->
         new Promise (resolve, reject) ->
