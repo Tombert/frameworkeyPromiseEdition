@@ -37,6 +37,7 @@ Let's load in the routes file
             configuredRoutes = require '../config/routes'
 
 Let's loop through the routes file and do the appropriate mapping.[1]
+
             _.each configuredRoutes, (totalString, route) ->
 
                 
