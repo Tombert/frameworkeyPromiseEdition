@@ -1,41 +1,55 @@
 Frameworkey - Promise Edition
-=========================
-*Frameworkey is an MVC framework designed around extensive use of Bluebird promises.*
+=============================
+
+*Frameworkey is an MVC framework designed around extensive use of Bluebird promises and controller-action composition*
 
 Have you ever felt that the callback model of Node can get kind of tiring?  Have you ever wanted to elegantly chain controller actions "Unix-pipeline-style"?  Have you ever wanted to use the `return` keyword in a web development setting? **If you said yes to any of these questions, try out Frameworkey!**
 
+Frameworkey is written (primarily) using Literate Coffeescript, with a dash of JavaScript and regular CoffeeScript thrown in. 
+
 ## Installation
-Before using Frameworkey, you must install CoffeeScript.
+Before using Frameworkey, you must install CoffeeScript.  From there, simply clone the repo and type `npm install`, and you're good to go!
+
 
 ## Running
 Run the following command in the console
+
 ```
-coffee app.coffee
+NODE_ENV=<environment_variable> coffee app.litcoffee
 ```
-## Notes
 
-#### 1) Determine Routing - processRequest( request )
+## Routing
+Routing is the main reason Framework was built.  Routes are defined in the `config/routes.coffee` file (you may convert it to regular JavaScript if you'd like).  Routes are done in the format of
 
-Routing is promised based. Controllers can prepends promises in the constructor prior to actual route function. There is one dedicated promise appended to the que that resolves the response to the user. It returns a HTML document or JSON.
+```
+"METHOD /route" : "ControllerName.ActionName!ControllerName.errorHandler ControllerName.ActionName2 $ ControllerName.catchAllErrorHandler"
+```
 
-#### 2) Map Request to Route
+There are a few things to note here:
+- You may attach as many controller-actions to a route as you'd like.
+- You may handle errors individually by attaching a `!` followed by the error-handler to the end of the method.
+- You may handle errors globally with a `$` followed by the error handler to the end of the chain.
+- The results (either returned or promised) of the first function will be passed into the next function, and this will continue until the end of the chain. 
+- You may break up your controllers with additional spaces or newlines if you'd like.
 
-#### 3) Santize Input
 
-#### 4) Pass clean input (unless fails sanity test) to promised controller function
+## Policies
 
-#### 5) Process que of promises
+Policies aren't particularly hard to grasp, but are different than most frameworks out there.
 
-#### 6) End of que has 1 last promise that returns a HTML response or JSON
+Custom policies are defined in the `/policies` folder, and you may have as many as you'd like.
 
-## Thoughts
-Controller processes models. 
+From there, policies can be attached to controllers and actions in the `/config/policies.coffee` file, which should be structured like so
 
-event -> dynamic construction of promise chain -> resolve
+```
+	module.exports =
+		someController:
+			'someAction': ['yourDefinedPolicy']
+			'*': 'catchAllPolicy'
+```
+Some notes about policies:
+- You may list several policies in an array.  All the policies must return (or promise) true for the request to actually be satisfied.
+- You may omit using an array if you only have one policy to attach to the action.
+- Anything that doesn't have a policy attached to it will fall back to whatever is attached to `*`.
 
-###### @future
-Admin Control Panel for Page Management, User Management, Feedback Form, etc.
-
-###### @todo
-Figure out a plugin system where sets of functionality are components (promised based?). Plugins are pre-made que's of actions. You can then mix/match actions from plugins
-
+While this is slightly different than tradition, it actually leads to a fairly pleasant programming experience.  Don't knock it before you try it. 
