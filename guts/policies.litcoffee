@@ -2,12 +2,12 @@ Policies
 --------
 This is the glue-file that manages how user-policies (e.g. who's allowed to do what) get defined.  This file is responsible for grabbing the 
 
-Load in the required libraries
+Let's load in the required libraries.  
 
     _ = require 'lodash'
     Promise = require "bluebird"
 
-Load up the user-defined policies. 
+Then load up the user-defined policies. 
 
     policies = require '../config/policies'
 
