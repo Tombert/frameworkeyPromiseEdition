@@ -1,5 +1,8 @@
 _ = require 'lodash'
-config = require '../config.json'
+cf = require '../config/config.json'
+
+config = cf[process.env.NODE_ENV]
+
 Sequelize = require 'sequelize'
 sequelize = new Sequelize config.db.database, config.db.username, config.db.password, config.db.options
 models = require '../models/'
