@@ -1,4 +1,8 @@
-Load in the libraries
+Policies
+--------
+This is the glue-file that manages how user-policies (e.g. who's allowed to do what) get defined.  This file is responsible for grabbing the 
+
+Load in the required libraries
 
     _ = require 'lodash'
     Promise = require "bluebird"
@@ -8,13 +12,16 @@ Load up the user-defined policies.
     policies = require '../config/policies'
 
 
+
     module.exports = (routeActions, req, res) ->
         new Promise (resolve, reject) ->
             require('./getPolicies')()
             .then (actualPolicies) ->
                 policyResults = _.flatten _.map routeActions, (action) ->
-                        # What I'm doing here is looking for the policies file.
-                        # If there is a policy defined for that action, use that, else use the * catch all. 
+
+What I'm doing here is looking for the policies file.
+If there is a policy defined for that action, use that, else use the * catch all. 
+
                         tempPolicies = _.flatten [policies[action.controllerName][action.actionName] || policies[action.controllerName]['*'] ]
 
                         _.map tempPolicies, (policy) ->
