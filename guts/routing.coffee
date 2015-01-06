@@ -99,7 +99,7 @@ module.exports = (app) ->
                     console.log "blah"
                     authPromise = policies actionHandles, req, res
 
-  
+
 
                     # Once we've gotten all the handles on the functions we need
                     # to call, we can concat it to all previous promises. Afterwards
