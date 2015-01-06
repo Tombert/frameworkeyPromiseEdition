@@ -3,7 +3,6 @@ fs = Promise.promisifyAll require 'fs'
 _ = require 'lodash'
 
 module.exports = () ->
-
     # For performance reasons, we'll do this asynchronously. 
     fs.readdirAsync('./controllers/').then (controllers) ->
 
@@ -11,7 +10,8 @@ module.exports = () ->
         # asynchronously, so I threw them in a promise
         makeAsyncControllerParse = (file) ->
             return new Promise (resolve, reject) ->
-                if file.match /.+\.js/g != null || file.match /.+\.coffee/g != null
+                console.log "Testing: ", 
+                if ((file.match /.+\.js/g)? or (file.match /.+\.coffee/g)? or (file.match /.+\.litcoffee/g)?)
                     # When requiring the module, we don't really want to specify an extension.
                     # Let's get rid of it.
                     myObject = {}
@@ -24,14 +24,13 @@ module.exports = () ->
         # Create a big ol' object of all the promises so that we have a handle on all the files.
         #
         # We're utilizing lodash's "chain" function simply because it gives us somewhat sane list
-        # comprehension comparable to linq. 
+        # comprehension comparable to linq.
         promiseObject =
             do
                 _.chain controllers
                 .map makeAsyncControllerParse
-                .reduce _.extend
+                .reduce (bigObject, smallObject) -> _.extend bigObject, smallObject
                 .value
-
         # Once everything is done from above, we return back the collective promise object and
         # pipe that to whomever feels fit. 
         return Promise.props promiseObject

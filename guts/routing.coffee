@@ -16,6 +16,8 @@ module.exports = (app) ->
     # Note, do this asynchronously. we'll load the controllers and policies
     # simultaneously.   
     .then (controllerObject) ->
+        console.log "sdafsd"
+
         #Let's load in the routes file
         configuredRoutes = require '../config/routes'
 
@@ -93,7 +95,8 @@ module.exports = (app) ->
                     # We need to make sure the user is allowed to use everything that
                     # this route has to offer.  Due to the beauty of Bluebird, if
                     # this this trips up, it'll just kill the promise chain and
-                    # make it so that we don't go any farther than we're allowed to. 
+                    # make it so that we don't go any farther than we're allowed to.
+                    console.log "blah"
                     authPromise = policies actionHandles, req, res
 
   
@@ -104,6 +107,7 @@ module.exports = (app) ->
                     # to run them, then converge into a single, final promise. 
                     finalPromise =
                         _.chain [authPromise]
+                        .flatten()
                         .concat actionHandles
                         .reduce (cur, next) ->
                             cur.then next.action, next.error
@@ -134,5 +138,6 @@ module.exports = (app) ->
                         
             # As stated above, wrapper will return a new function based on what 
             # we send in for "allRoutes".  We're adding the "toLowerCase()" to make 
-            # this a bit more dev-friendly. 
+            # this a bit more dev-friendly.
+            console.log method
             app[do method.toLowerCase] endpoint, wrapper

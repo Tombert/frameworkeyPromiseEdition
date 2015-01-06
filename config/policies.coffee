@@ -1,3 +1,4 @@
 module.exports = 
-    UserController:
+    myController:
         'action': ['auth']
+        '*':['auth']
