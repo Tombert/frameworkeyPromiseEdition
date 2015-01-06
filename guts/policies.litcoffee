@@ -6,13 +6,6 @@ Libraries
     module.exports = (routeActions, req, res) ->
         new Promise (resolve, reject) ->
             require('./getPolicies')()
-            
-This should give us an object of all the policies attached to the controller
-and action.  To make this a bit more dev-friendly, we'll wrap this in an
-array, then flatten it.  This way we can make it a nice, linear, one-dimensional
-list to loop through, and that way you can write an array of policies or just one
-policy for an action.  If that's what you want. I don't wanna tell you how to live
-your life.
             .then (actualPolicies) ->
                 policyResults = _.flatten _.map routeActions, (action) ->
                         # What I'm doing here is looking for the policies file.
