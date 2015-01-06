@@ -16,7 +16,7 @@ module.exports = (routeActions, req, res) ->
         # your life. 
         tempActions = _.flatten [ policies[routeActions.controllerName][routeActions.actionName] ]
 
-        policyResults = _.map actions, (policy) ->
+        policyResults = _.map tempActions, (policy) ->
                 # This is pretty straightforward; we'll loop up the policy in the hash
                 # table and then return back their result (which can just be a true or false
                 #
