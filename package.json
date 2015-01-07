@@ -28,6 +28,7 @@
   "dependencies": {
     "bluebird": "^2.2.2",
     "express": "^4.6.1",
+    "formidable": "^1.0.16",
     "grunt": "^0.4.5",
     "grunt-contrib-coffee": "^0.10.1",
     "grunt-contrib-cssmin": "*",
