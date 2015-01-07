@@ -14,7 +14,6 @@ As a note, the `Promise.promisifyAll` function simply adds `Async` to the end of
 
 ##Local Modules
 
-    getControllers = require './getControllers'
     policies = require './policies'
     bodyParser = require './bodyParser'
 
@@ -27,7 +26,7 @@ Let's kickstart this router.
         
 This grabs the controllers and returns back a promise'd object of them. It made more sense to put this in a separate file, since it'sarguably useful in its own right.
 
-        getControllers()
+        getFiles('controllers')
 
 Once we've gotten all the controllers, we'll move on
 
