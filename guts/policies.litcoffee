@@ -22,7 +22,7 @@ We want to reject or resolve the promise based on whether or not someone is allo
 
 Let's load up the helper function that grabs all the policy files.  This function was arguably useful in its own right, so it made sense to make it its own separate module. 
 
-            require('./getPolicies')()
+            require('./getFiles')('policies')
 
 Once the policies are done loading, we can move on. 
 

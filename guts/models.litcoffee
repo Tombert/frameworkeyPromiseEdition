@@ -24,7 +24,7 @@ Let's start the function.
 
 First we need to grab all the model files
  
-        require('./getModels')()
+        require('./getFiles')('models')
 
 Once we have a handle on the models, we can proceeed to process them. We'll just map through the models, and concatinate them into one big object of Sequelize objects using a combination of the `reduce` and `extend` function from lodash. 
 
