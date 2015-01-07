@@ -16,6 +16,7 @@ As a note, the `Promise.promisifyAll` function simply adds `Async` to the end of
 
     getControllers = require './getControllers'
     policies = require './policies'
+    bodyParser = require './bodyParser'
 
 
 Let's kickstart this router.
@@ -120,36 +121,36 @@ This here is the glue that does the joining of the actual functions.  In a nutsh
 
 We need to make sure the user is allowed to use everything that this route has to offer.  Due to the beauty of Bluebird, if this this trips up, it'll just kill the promise chain and make it so that we don't go any farther than we're allowed to.
 
-                        authPromise = policies actionHandles, req, res
-
-
+                        bodyParser req
+                        .then (updatedReq) ->
+                            policies actionHandles, updatedReq, res
 
 Once we've gotten all the handles on the functions we need to call, we can concat it to all previous promises. Afterwards we want these to run sequentially, so we use the reduce function to run them, then converge into a single, final promise.
 
-                        finalPromise =
-                            _.chain [authPromise]
-                            .flatten()
-                            .concat actionHandles
-                            .reduce (cur, next) ->
-                                cur.then next.action, next.error
-                            .value()
-
+                            finalPromise =
+                                _.chain [authPromise, bodyParsePromise]
+                                .flatten()
+                                .concat actionHandles
+                                .reduce (cur, next) ->
+                                    cur.then next.action, next.error
+                                .value()
+                                
 Everything should be done.  We can finally render a template or return back JSON depending on what they did on that last function
 
-                        finalPromise.then (endData) ->
+                            finalPromise.then (endData) ->
 
 
-What happens now is pretty simple.  A requirement for frameworkey is that you return an object with your data and the `renderType` property. From there it's pretty straightforward. 
+What happens now is pretty simple.  A requirement for frameworkey is that you return an object with your data and the `renderType` property. From there it's pretty straightforward.
 
-                            if endData.renderType.toLowerCase() == 'html'
-                                # We used "toLowerCase" to make it more dev-friendly. 
-                                res.render endData.page
-                            else if endData.renderType.toLowerCase() == 'json'
-                                res.send endData.data
+                                if endData.renderType.toLowerCase() == 'html'
+                                    # We used "toLowerCase" to make it more dev-friendly. 
+                                    res.render endData.page
+                                else if endData.renderType.toLowerCase() == 'json'
+                                    res.send endData.data
                                 
 We'll use the global catch defined at the end of the actions to handle residual errors.  If there's an issue, we go here. We can default to an empty function if there's an issue.
 
-                        finalPromise.catch catcher
+                            finalPromise.catch catcher
 
                             
 As stated above, wrapper will return a new function based on what we send in for "allRoutes".  We're adding the "toLowerCase()" to make this a bit more dev-friendly.

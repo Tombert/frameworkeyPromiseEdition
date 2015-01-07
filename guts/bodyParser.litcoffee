@@ -26,6 +26,9 @@ Once we've promisified, it becomes as simple as passing in the request object in
 
             f.parseAsync req
 
+            .then (fields) ->
+                _.extend req.params, fields
+
 This matches up to the `if req.method` above.  Basically, if it makes it into this else, that means we're dealing with a `GET` request, which we don't need to parse, so we'll just send back an empty object.  Since there isn't a lot that can go wrong in simply resolving back an empty object, I don't feel the need to bother with a reject. 
 
         else
