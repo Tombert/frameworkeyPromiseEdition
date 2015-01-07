@@ -128,7 +128,7 @@ We need to make sure the user is allowed to use everything that this route has t
 Once we've gotten all the handles on the functions we need to call, we can concat it to all previous promises. Afterwards we want these to run sequentially, so we use the reduce function to run them, then converge into a single, final promise.
 
                             finalPromise =
-                                _.chain [authPromise, bodyParsePromise]
+                                _.chain [authPromise]
                                 .flatten()
                                 .concat actionHandles
                                 .reduce (cur, next) ->
