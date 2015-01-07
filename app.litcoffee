@@ -2,11 +2,13 @@ Kickstart File
 --------------
 This file is responsible for starting up the entire server. 
 
-Lets start by initializing our basic express stuff.
+Let's start by initializing our basic express stuff.
 
     express = require 'express'
     app = express()
 
+Let's also load in the config
+    config = require('./config/config')[process.env.NODE_ENV]
 
 We need to set a default "views" directory. `/views` makes sense.
 
@@ -24,6 +26,6 @@ This is our route-mapper, which is responsible for acting as "glue" between the 
 
     require('./guts/routing')(app)
 
-We will listen on the port `3000`.
+We will listen on the port specified in the environment variable or fall back to  `3000` if nothing is set. 
 
-    app.listen(3000)
+    app.listen(config.port || 3000)

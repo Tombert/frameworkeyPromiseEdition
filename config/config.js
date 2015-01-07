@@ -1,4 +1,4 @@
-{
+module.exports = {
 	"local":{
 		"db": {
 			"database": "test",
@@ -6,5 +6,6 @@
 			"password": "test",
 			"options":{}
 		}
+		'port': process.env.PORT
 	}
 }
