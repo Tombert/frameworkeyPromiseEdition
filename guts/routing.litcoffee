@@ -26,7 +26,7 @@ Let's kickstart this router.
         
 This grabs the controllers and returns back a promise'd object of them. It made more sense to put this in a separate file, since it'sarguably useful in its own right.
 
-        getFiles('controllers')
+        require('./getFiles')('controllers')
 
 Once we've gotten all the controllers, we'll move on
 
@@ -122,7 +122,7 @@ We need to make sure the user is allowed to use everything that this route has t
 
                         bodyParser req
                         .then (updatedReq) ->
-                            policies actionHandles, updatedReq, res
+                            authPromise = policies actionHandles, updatedReq, res
 
 Once we've gotten all the handles on the functions we need to call, we can concat it to all previous promises. Afterwards we want these to run sequentially, so we use the reduce function to run them, then converge into a single, final promise.
 

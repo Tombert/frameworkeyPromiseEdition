@@ -18,7 +18,7 @@ Let's start the function. Expected input is a string of the type of file you wan
 
 Let's read in the folder of the files. 
 
-        fs.readdirAsync './#{type}'
+        fs.readdirAsync "./#{type}"
 
 Once the files have been loaded, the remaining logic is pretty simple: We `map` through them and require them, and from there we can plop them into an array.
 
