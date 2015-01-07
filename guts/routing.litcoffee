@@ -42,7 +42,7 @@ Let's loop through the routes file and do the appropriate mapping.[1]
             _.each configuredRoutes, (totalString, route) ->
 
                 
-Routes are stored like METHOD /route, so we'll split on spaces. To make this a bit more dev-friendly, let's get rid of redundant spaces and newlines.
+Routes are stored like METHOD /route, so we'll split on spaces. To make this a bit more dev-friendly, let's get rid of redundant spaces and newlines so that we're not punishing devs for using extra whitespace. 
 
                 [method, endpoint] = route
                              .replace /(?:\r\n|\r|\n)/g, ' '
