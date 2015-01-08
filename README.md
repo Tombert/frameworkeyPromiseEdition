@@ -32,6 +32,20 @@ There are a few things to note here:
 - The results (either returned or promised) of the first function will be passed into the next function, and this will continue until the end of the chain. 
 - You may break up your controllers with additional spaces or newlines if you'd like.
 
+### Note about API vs HTML Pages
+There is an imposed standard for managing whether a page is an API-style web-service vs a server-rendered web page.  If you'd like to make your page to be an API, make sure your last function returns an object with a `renderType` param with the choices of `HTML` or `JSON` (case insensitive), with the `HTML` type requiring a `page` parameter as well the name of the view you want to be run.  
+
+This might seem frustrating to some people, but generally I just write a couple functions like this: 
+
+```
+makeAPI: (renderingItem) ->
+	return {renderType: 'json', data: renderingItem}
+
+makeDOM: (renderingItem) ->
+      	return {renderType: 'html', data: renderingItem, page: 'testView'}
+```
+
+Due to the modular nature of the router, you only have to write these functions once, in one controller, and simply add them to the end of the route chain. 
 
 ## Policies
 
