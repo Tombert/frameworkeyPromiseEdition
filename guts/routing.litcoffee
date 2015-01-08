@@ -152,7 +152,7 @@ We'll use the global catch defined at the end of the actions to handle residual 
                             finalPromise.catch catcher
 
                             
-As stated above, wrapper will return a new function based on what we send in for "allRoutes".  We're adding the "toLowerCase()" to make this a bit more dev-friendly.
+As stated above, wrapper will return a new function based on what we send in for `allRoutes`.  We're adding the `toLowerCase` to make this a bit more dev-friendly.
 
                 app[do method.toLowerCase] endpoint, wrapper
 
