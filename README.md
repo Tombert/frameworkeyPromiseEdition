@@ -22,7 +22,7 @@ NODE_ENV=<environment_variable> coffee app.litcoffee
 Routing is the main reason Framework was built.  Routes are defined in the `config/routes.coffee` file (you may convert it to regular JavaScript if you'd like).  Routes are done in the format of
 
 ```
-"METHOD /route" : "ControllerName.ActionName!ControllerName.errorHandler ControllerName.ActionName2 $ ControllerName.catchAllErrorHandler"
+"METHOD /route" : "ControllerName.ActionName!ControllerName.errorHandler ControllerName.ActionName2 @ ControllerName.catchAllErrorHandler"
 ```
 
 There are a few things to note here:
