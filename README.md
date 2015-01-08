@@ -62,7 +62,7 @@ From there, policies can be attached to controllers and actions in the `/config/
 			'*': 'catchAllPolicy'
 ```
 Some notes about policies:
-- You may list several policies in an array.  All the policies must return (or promise) true for the request to actually be satisfied.
+- You may list several policies in an array.  All the policies must return (or promise) `true` for the request to actually be satisfied.  To decline permission, either reject the Promise, return `false`, or resolve `false`. 
 - You may omit using an array if you only have one policy to attach to the action.
 - Anything that doesn't have a policy attached to it will fall back to whatever is attached to `*`.
 
